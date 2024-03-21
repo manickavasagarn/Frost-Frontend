@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 import images from "../img/undraw_posting_photo.svg"
-
+import { selectEmployees } from '../stores/employeeSlice';
+import { useDispatch, useSelector } from "react-redux"
+import { fetchAllEmployees } from "../stores/employeeSlice";
 function Dashborad() {
+    
   return (
     <>
       <div>

@@ -1,10 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import profile from "../img/undraw_profile.svg";
+import axios from "axios";
+import { toast } from "react-toastify";
 function Navbar() {
+  const [info, setInfo] = useState({});
+  const [waiting, setWaiting] = useState([]);
   const redirectToLogin = () => {
     window.location.href = "/";
     localStorage.removeItem("authToken");
   };
+
+  const getWaitingList = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/admin/waitingUpdate`
+      );
+      setWaiting(data);
+      toast.success(data?.data?.message);
+    } catch (error) {
+      console.log(error);
+      // let errmsg = (error?.response?.data?.message) ? (error?.response?.data?.message) : (`${error?.response?.status} - ${error?.response?.statusText}`)
+      let errmsg = error?.response
+        ? error?.response?.data?.message
+          ? error?.response?.data?.message
+          : `${error?.response?.status} - ${error?.response?.statusText}`
+        : "Something went wrong. Please try again later";
+      toast.error(errmsg);
+    }
+  };
+
+  const getDetail = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/users/myDetail`
+      );
+      console.log(data);
+      setInfo(data);
+    } catch (error) {
+      console.log(error);
+      // let errmsg = (error?.response?.data?.message) ? (error?.response?.data?.message) : (`${error?.response?.status} - ${error?.response?.statusText}`)
+      let errmsg = error?.response
+        ? error?.response?.data?.message
+          ? error?.response?.data?.message
+          : `${error?.response?.status} - ${error?.response?.statusText}`
+        : "Something went wrong. Please try again later";
+      toast.error(errmsg);
+    }
+  };
+  useEffect(() => {
+    getDetail();
+    getWaitingList();
+  }, []);
 
   return (
     <>
@@ -80,49 +126,26 @@ function Navbar() {
               aria-expanded="false"
             >
               <i class="fas fa-bell fa-fw"></i>
-
-              <span class="badge badge-danger badge-counter">3+</span>
+              {waiting.length != 0 ? (
+                <span class="badge badge-danger badge-counter">
+                  {waiting.length}
+                </span>
+              ) : null}
             </a>
 
             <div
               class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
               aria-labelledby="alertsDropdown"
             >
-              <h6 class="dropdown-header">Alerts Center</h6>
-              <a class="dropdown-item d-flex align-items-center">
-                <div class="mr-3">
-                  <div class="icon-circle bg-primary">
-                    <i class="fas fa-file-alt text-white"></i>
-                  </div>
-                </div>
-                <div>
-                  <div class="small text-gray-500">December 12, 2019</div>
-                  <span class="font-weight-bold">
-                    A new monthly report is ready to download!
-                  </span>
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center">
-                <div class="mr-3">
-                  <div class="icon-circle bg-success">
-                    <i class="fas fa-donate text-white"></i>
-                  </div>
-                </div>
-                <div>
-                  <div class="small text-gray-500">December 7, 2019</div>
-                  $290.29 has been deposited into your account!
-                </div>
-              </a>
-              <a class="dropdown-item d-flex align-items-center">
+              <h6 class="dropdown-header">Waiting List</h6>
+              <a class="dropdown-item d-flex align-items-center" href="/waitinglist">
                 <div class="mr-3">
                   <div class="icon-circle bg-warning">
                     <i class="fas fa-exclamation-triangle text-white"></i>
                   </div>
                 </div>
                 <div>
-                  <div class="small text-gray-500">December 2, 2019</div>
-                  Spending Alert: We've noticed unusually high spending for your
-                  account.
+                Edit requested for item {waiting?.length}. Please review and make the necessary changes.
                 </div>
               </a>
               <a class="dropdown-item text-center small text-gray-500">
@@ -233,7 +256,7 @@ function Navbar() {
               aria-expanded="false"
             >
               <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                Douglas McGee
+                {info?.USERNAME}
               </span>
               <img class="img-profile rounded-circle" src={profile} />
             </a>
@@ -243,7 +266,7 @@ function Navbar() {
               aria-labelledby="userDropdown"
             >
               <a class="dropdown-item " href="/profile">
-                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400" ></i>
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                 Profile
               </a>
               <a class="dropdown-item">
@@ -260,9 +283,7 @@ function Navbar() {
                 data-toggle="modal"
                 data-target="#logoutModal"
               >
-                <i
-                  class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
-                ></i>
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Logout
               </a>
             </div>
@@ -291,9 +312,7 @@ function Navbar() {
                   <span aria-hidden="true">×</span>
                 </button>
               </div>
-              <div class="modal-body">
-              Are you sure you want to quit?
-              </div>
+              <div class="modal-body">Are you sure you want to quit?</div>
               <div class="modal-footer">
                 <button
                   class="btn btn-secondary"
@@ -302,7 +321,9 @@ function Navbar() {
                 >
                   Cancel
                 </button>
-                <a class="btn btn-primary" onClick={()=>redirectToLogin()}>Logout</a>
+                <a class="btn btn-primary" onClick={() => redirectToLogin()}>
+                  Logout
+                </a>
               </div>
             </div>
           </div>

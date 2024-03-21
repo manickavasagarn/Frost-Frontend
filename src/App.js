@@ -9,6 +9,9 @@ import NoPage from "./js/NoPage";
 import Profile from "./js/Profile";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import User from "./js/User";
+import NewUser from "./js/NewUser";
+import WaitingList from "./js/WaitingList";
 
 function App() {
   const loggedin = Boolean(localStorage.getItem("authToken"));
@@ -22,6 +25,9 @@ function App() {
           <>
             <Route path="/Dashboard" element={<Dashborad />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/users" element={<User />} />
+            <Route path="/newUser" element={<NewUser />} />
+            <Route path="/waitingList" element={<WaitingList />} />
           </>
         ) : (
           <Route path="/*" element={<Navigate replace to="/" />} />

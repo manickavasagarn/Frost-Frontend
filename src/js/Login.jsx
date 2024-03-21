@@ -8,7 +8,11 @@ function Login() {
   const [state, setState] = useState(init);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
 
+  const togglePassword = () => {
+    setIsPassword(!isPassword);
+  };
   const handleSubmit = async () => {
     if (error == "") {
       let check = Object.keys(init)?.filter((ele) => {
@@ -31,6 +35,7 @@ function Login() {
         setSubmitting(false);
         setTimeout(() => {
           window.location.href = "/Dashboard";
+          sessionStorage.setItem("role", data?.role);
           localStorage.setItem("authToken", data?.token);
         }, 1000);
       } catch (error) {
@@ -67,7 +72,7 @@ function Login() {
                         <div class="text-center">
                           <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                         </div>
-                        <form class="user">
+                        <div class="user">
                           <div class="form-group">
                             <input
                               type="text"
@@ -82,18 +87,40 @@ function Login() {
                               }}
                             />
                           </div>
-                          <div class="form-group">
-                            <input
-                              type="password"
-                              class="form-control form-control-user"
-                              id="exampleInputPassword"
-                              placeholder="Password"
-                              name="password"
-                              value={state?.password}
-                              onChange={(e) => {
-                                handleState(e);
-                              }}
-                            />
+                          <div class="form-group row">
+                            <div
+                              className="col-10"
+                              style={{ paddingRight: "0" }}
+                            >
+                              <input
+                                type={isPassword ? "text" : "password"}
+                                class="form-control form-control-user"
+                                id="exampleInputPassword"
+                                placeholder="Password"
+                                name="password"
+                                value={state?.password}
+                                onChange={(e) => {
+                                  handleState(e);
+                                }}
+                              />
+                            </div>
+                            <div
+                              className="col-2 ps-0"
+                              style={{ paddingLeft: "0" }}
+                            >
+                              <div
+                                className="form-control"
+                                onClick={() => {
+                                  togglePassword()
+                                }}
+                              >
+                                {isPassword ? (
+                                  <i className="fa-solid fa-eye"></i>
+                                ) : (
+                                  <i className="fa-solid fa-eye-slash"></i>
+                                )}
+                              </div>
+                            </div>
                           </div>
                           {error != "" ? (
                             <div>
@@ -125,7 +152,7 @@ function Login() {
                             Login
                           </a>
                           <hr />
-                        </form>
+                        </div>
 
                         <div class="text-center">
                           <a class="small">Forgot Password?</a>

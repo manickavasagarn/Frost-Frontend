@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import axios from "axios";
 import { toast } from "react-toastify";
 import apiclient from "./Apiclient";
+import Spinner from "./Spinner";
 
 const init = {
   username: "",
@@ -16,16 +17,16 @@ const init = {
   dob: "",
   gender: "",
 };
-function Profile() {
+function NewUser() {
   const [state, setState] = useState(init);
   const [error, setError] = useState("");
   const [disable, setDisable] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const handleState = (e) => {
     let { value, name } = e.target;
     let temp = { ...state };
     temp[name] = value;
-    console.log(temp);
     setState(temp);
     setError("");
     if (name == "mail") {
@@ -53,14 +54,17 @@ function Profile() {
         setError("Please fill in all fields");
         return 0;
       }
-      setDisable(true);
+      setLoader(true)
       try {
-        let data = await axios.put(
-          `${process.env.REACT_APP_BASE_URL}/users/update`,
+        let data = await axios.post(
+          `${process.env.REACT_APP_BASE_URL}/admin/userCreation`,
           { ...state }
         );
         setState(init);
-        toast.success(data?.data?.message)
+        toast.success(data?.data?.message, { autoClose: 3000 })
+        setTimeout(() => {
+            window.location.href = "/User"
+        }, 3000);
       } catch (error) {
         console.error(error);
         let errmsg = error?.response
@@ -71,41 +75,11 @@ function Profile() {
       toast.error(errmsg);
       }
       setDisable(false);
+      setLoader(false)
     }
   };
 
-  const getDetail = async () => {
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/users/myDetail`
-      );
-      console.log(data);
-      setState({
-        ID:data.ID,
-        username: data.USERNAME,
-        firstname: data.FIRST_NAME,
-        lastname: data.LAST_NAME,
-        mail: data.MAIL,
-        number: data.PHONE_NUMBER,
-        address: data.ADDRESS,
-        dob: data.DOB,
-        gender: data.GENDER,
-      });
-      toast.success(data?.data?.message)
-    } catch (error) {
-      console.log(error);
-      // let errmsg = (error?.response?.data?.message) ? (error?.response?.data?.message) : (`${error?.response?.status} - ${error?.response?.statusText}`)
-      let errmsg = error?.response
-        ? error?.response?.data?.message
-          ? error?.response?.data?.message
-          : `${error?.response?.status} - ${error?.response?.statusText}`
-        : "Something went wrong. Please try again later";
-      toast.error(errmsg);
-    }
-  };
-  useEffect(() => {
-    getDetail();
-  }, []);
+ 
 
   return (
     <>
@@ -116,10 +90,17 @@ function Profile() {
           <div id="content-wrapper" class="d-flex flex-column">
             <div id="content">
               <Navbar />
-
+              {loader ? (
+                <div className="position-relative">
+                  <div className="backdrop"></div>
+                  <div className="spinner-container">
+                    <Spinner />
+                  </div>
+                </div>
+              ) : null}
               <div class="container-fluid">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                  <h1 class="h3 mb-0 text-gray-800">Profile</h1>
+                  <h1 class="h3 mb-0 text-gray-800">New User</h1>
                 </div>
               </div>
               <div class="row">
@@ -165,7 +146,6 @@ function Profile() {
                               id="exampleInputEmail"
                               placeholder="Email"
                               name="mail"
-                              disabled
                               value={state?.mail}
                               onChange={(e) => {
                                 handleState(e);
@@ -192,7 +172,6 @@ function Profile() {
                                 id="exampleInputUsername"
                                 placeholder="User Name"
                                 name="username"
-                                disabled
                                 value={state?.username}
                                 onChange={(e) => {
                                   handleState(e);
@@ -280,4 +259,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default NewUser;

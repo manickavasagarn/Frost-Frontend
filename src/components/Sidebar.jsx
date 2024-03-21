@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {  useLocation } from "react-router";
+import { useLocation } from "react-router";
 function Sidebar() {
-    const location = useLocation();
-    const [currentActiveTab, setCurrentActiveTab] = useState();
-    useEffect(() => {
-        setCurrentActiveTab(location.pathname);
-      }, []);
+  const location = useLocation();
+  const [currentActiveTab, setCurrentActiveTab] = useState();
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    setCurrentActiveTab(location.pathname);
+    var role = sessionStorage.getItem("role");
+    if (role == "Admin") {
+      setIsAdmin(true);
+    }
+  }, []);
   return (
     <>
       {" "}
@@ -13,22 +18,20 @@ function Sidebar() {
         class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
         id="accordionSidebar"
       >
-        <a
-          class="sidebar-brand d-flex align-items-center justify-content-center"
-        >
+        <a class="sidebar-brand d-flex align-items-center justify-content-center">
           <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
           </div>
-          <div class="sidebar-brand-text mx-3">
-            Frost
-          </div>
+          <div class="sidebar-brand-text mx-3">Frost</div>
         </a>
 
         <hr class="sidebar-divider my-0"></hr>
 
-        <li class={`nav-item ${
-                    currentActiveTab === "/Dashboard" ? "active" : ""
-                  }`}>
+        <li
+          class={`nav-item ${
+            currentActiveTab === "/Dashboard" ? "active" : ""
+          }`}
+        >
           <a class="nav-link" href="/Dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
@@ -58,12 +61,8 @@ function Sidebar() {
           >
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Custom Components:</h6>
-              <a class="collapse-item" >
-                Buttons
-              </a>
-              <a class="collapse-item" >
-                Cards
-              </a>
+              <a class="collapse-item">Buttons</a>
+              <a class="collapse-item">Cards</a>
             </div>
           </div>
         </li>
@@ -87,18 +86,10 @@ function Sidebar() {
           >
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Custom Utilities:</h6>
-              <a class="collapse-item" >
-                Colors
-              </a>
-              <a class="collapse-item" >
-                Borders
-              </a>
-              <a class="collapse-item" >
-                Animations
-              </a>
-              <a class="collapse-item" >
-                Other
-              </a>
+              <a class="collapse-item">Colors</a>
+              <a class="collapse-item">Borders</a>
+              <a class="collapse-item">Animations</a>
+              <a class="collapse-item">Other</a>
             </div>
           </div>
         </li>
@@ -126,23 +117,13 @@ function Sidebar() {
           >
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Login Screens:</h6>
-              <a class="collapse-item" >
-                Login
-              </a>
-              <a class="collapse-item" >
-                Register
-              </a>
-              <a class="collapse-item" >
-                Forgot Password
-              </a>
+              <a class="collapse-item">Login</a>
+              <a class="collapse-item">Register</a>
+              <a class="collapse-item">Forgot Password</a>
               <div class="collapse-divider"></div>
               <h6 class="collapse-header">Other Pages:</h6>
-              <a class="collapse-item" >
-                404 Page
-              </a>
-              <a class="collapse-item" >
-                Blank Page
-              </a>
+              <a class="collapse-item">404 Page</a>
+              <a class="collapse-item">Blank Page</a>
             </div>
           </div>
         </li>
@@ -154,14 +135,19 @@ function Sidebar() {
           </a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link" >
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tables</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider d-none d-md-block"></hr>
+        {/* <hr class="sidebar-divider d-none d-md-block"></hr> */}
+        <hr class="sidebar-divider"></hr>
+        {isAdmin ? (
+          <>
+            <div class="sidebar-heading">Admin</div>
+            <li class="nav-item">
+              <a class="nav-link" href="/users">
+                <i class="fas fa-fw fa-table"></i>
+                <span>User</span>
+              </a>
+            </li>
+          </>
+        ) : null}
       </ul>
     </>
   );

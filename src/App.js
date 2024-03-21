@@ -1,24 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+// import './App.css';
+import { Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashborad from "./js/Dashborad";
+import Login from "./js/Login";
+import Register from "./js/Register";
+import NoPage from "./js/NoPage";
+import Profile from "./js/Profile";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const loggedin = Boolean(localStorage.getItem("authToken"));
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <ToastContainer position="top-center" />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+        {loggedin ? (
+          <>
+            <Route path="/Dashboard" element={<Dashborad />} />
+            <Route path="/profile" element={<Profile />} />
+          </>
+        ) : (
+          <Route path="/*" element={<Navigate replace to="/" />} />
+        )}
+        <Route path="*" element={<NoPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

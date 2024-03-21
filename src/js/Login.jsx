@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 const init = {
   username: "john_doe",
   password: "password123",
@@ -41,7 +42,7 @@ function Login() {
       } catch (error) {
         setSubmitting(false);
         console.error(error);
-        alert("Error! Login failed wrong user credentials");
+        toast.error("Error! Login failed wrong user credentials");
       }
     }
   };

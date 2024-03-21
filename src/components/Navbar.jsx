@@ -49,7 +49,10 @@ function Navbar() {
   };
   useEffect(() => {
     getDetail();
-    getWaitingList();
+    var role = sessionStorage.getItem("role");
+    if (role == "Admin") {
+      getWaitingList();
+    }
   }, []);
 
   return (
@@ -138,14 +141,18 @@ function Navbar() {
               aria-labelledby="alertsDropdown"
             >
               <h6 class="dropdown-header">Waiting List</h6>
-              <a class="dropdown-item d-flex align-items-center" href="/waitinglist">
+              <a
+                class="dropdown-item d-flex align-items-center"
+                href="/waitinglist"
+              >
                 <div class="mr-3">
                   <div class="icon-circle bg-warning">
                     <i class="fas fa-exclamation-triangle text-white"></i>
                   </div>
                 </div>
                 <div>
-                Edit requested for item {waiting?.length}. Please review and make the necessary changes.
+                  Edit requested for item {waiting?.length}. Please review and
+                  make the necessary changes.
                 </div>
               </a>
               <a class="dropdown-item text-center small text-gray-500">

@@ -34,7 +34,10 @@ function WaitingList() {
     }
   };
   useEffect(() => {
-    getWaitingList();
+    var role = sessionStorage.getItem("role");
+    if (role == "Admin") {
+        getWaitingList();
+    }
   }, []);
 
   const rejectEdit = async (id) => {

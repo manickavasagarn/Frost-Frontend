@@ -60,6 +60,7 @@ function Profile() {
           { ...state }
         );
         setState(init);
+        getDetail();
         toast.success(data?.data?.message)
       } catch (error) {
         console.error(error);
@@ -69,6 +70,7 @@ function Profile() {
           : `${error?.response?.status} - ${error?.response?.statusText}`
         : "Something went wrong. Please try again later";
       toast.error(errmsg);
+      getDetail()
       }
       setDisable(false);
     }

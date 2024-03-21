@@ -63,7 +63,7 @@ function NewUser() {
         setState(init);
         toast.success(data?.data?.message, { autoClose: 3000 })
         setTimeout(() => {
-            window.location.href = "/User"
+            window.location.href = "/users"
         }, 3000);
       } catch (error) {
         console.error(error);

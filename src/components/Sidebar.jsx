@@ -140,7 +140,9 @@ function Sidebar() {
         {isAdmin ? (
           <>
             <div class="sidebar-heading">Admin</div>
-            <li class="nav-item">
+            <li
+              class={`nav-item ${currentActiveTab === "/users" ? "active" : ""}`}
+            >
               <a class="nav-link" href="/users">
                 <i class="fas fa-fw fa-table"></i>
                 <span>User</span>

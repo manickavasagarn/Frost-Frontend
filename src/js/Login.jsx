@@ -99,6 +99,7 @@ function Login() {
                                 id="exampleInputPassword"
                                 placeholder="Password"
                                 name="password"
+                                style={{borderBottomRightRadius: "0",borderTopRightRadius: "0"}}
                                 value={state?.password}
                                 onChange={(e) => {
                                   handleState(e);
@@ -111,6 +112,7 @@ function Login() {
                             >
                               <div
                                 className="form-control"
+                                style={{borderBottomLeftRadius: "0",borderTopLeftRadius: "0"}}
                                 onClick={() => {
                                   togglePassword()
                                 }}
